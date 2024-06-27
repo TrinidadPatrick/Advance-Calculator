@@ -19,7 +19,7 @@ let operator = null;
 let result = null
 let equation = []
 
-const compute = (key) => {
+const compute = () => {
     let prevValues = Number(prevInput.join(""))
     let currValues = Number(currInput.join(""))
     switch (operator) {
@@ -57,7 +57,7 @@ const setKey = (key) => {
         currInput.push(key)
         equation_container.textContent = equation.join("")
     }
-    else if(key === "AC")
+    else if(key === "AC") //If on is pressed
     {
         currInput = [];
         prevInput = [];
@@ -67,7 +67,7 @@ const setKey = (key) => {
         equation_container.textContent = ''
         result_container.textContent = ''
     }
-    else if(key === "%")
+    else if(key === "%") //If percentage is pressed
     {
         const percent = Number(currInput.join("")) * 0.01
         prevInput = String(percent).split("")
@@ -80,7 +80,7 @@ const setKey = (key) => {
     else
     {   
         let operators = '%/*-+'
-        if(operators.includes(key)) //if an operator is pressed
+        if(operators.includes(key) && (currInput.length !== 0 || prevInput.length !== 0)) //if an operator is pressed
         {   
             if(prevInput.length === 0)
             {
@@ -99,13 +99,31 @@ const setKey = (key) => {
             }
             equation_container.textContent = equation.join("")
         }
-        if(key === "=")
+        if(key === "=" && operator !== null)
         {   
             compute()
             currInput = []
             equation = [result]
             result_container.textContent = ""
             equation_container.textContent = "= " + result
+        }
+        if(key === "<") {
+            if(currInput.length !== 0) {
+                currInput.pop();
+                equation.pop();
+            } else if(prevInput.length !== 0) {
+                if(operator !== null)
+                {
+                    operator = null
+                    equation.pop();
+                }
+                else
+                {
+                    prevInput.pop();
+                    equation.pop();
+                }
+            }
+            equation_container.textContent = equation.join("");
         }
     }
 }
